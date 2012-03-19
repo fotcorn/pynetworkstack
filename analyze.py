@@ -1,20 +1,19 @@
 from binascii import unhexlify
 import struct
 
-from datastructs import EthernetFrame
-
-
-
-def parse_ethernet_frame(data):
-    frame = EthernetFrame()
-    packet = struct.unpack('!IIHIHH', data[:18])
-    frame.protocol = packet[0]
-    frame.destination = packet[1]*65536 + packet[2]
-    frame.source = packet[3]*65536 + packet[4]
-    frame.data = data[:18]
-    return frame
+from datastructs import EthernetFrame, Arp
 
 
 data = unhexlify('00000806ffffffffffffe4115b2ca6d808060001080006040001e4115b2ca6d8c0a802e6000000000000c0a802e7')
 
-print parse_ethernet_frame(data)
+ethernet_frame = EthernetFrame()
+ethernet_frame.decode(data[4:])
+
+protocols = { 0x806: Arp }
+
+
+if ethernet_frame.protocol in protocols:
+    protocol_frame = protocols[ethernet_frame.protocol]()
+    protocol_frame.decode(ethernet_frame.payload)
+    
+    

@@ -7,21 +7,3 @@ sudo route add default gw 192.168.2.1
 sudo openvpn --mktun --dev tap0 --user corn --group corn
 sudo brctl addif br0 tap0
 sudo ifconfig tap0 0.0.0.0 promisc up
-
-
-
-
-
-
-auto lo
-iface lo inet loopback
-
-auto eth0
-iface eth0 inet manual
-
-auto br0
-iface br0 inet dhcp
-        bridge_ports eth0
-        bridge_stp off
-        bridge_fd 0
-        bridge_maxwait 0
