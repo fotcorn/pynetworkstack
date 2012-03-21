@@ -1,4 +1,5 @@
 import struct
+from utils import int_to_ip
 
 class EthernetFrame():
     source = destination = protocol = payload = None
@@ -33,3 +34,7 @@ class Arp():
 
     def encode(self):
         return ''
+    
+    def __str__(self):
+        return str(self.opcode) + ': ' + hex(self.sender_mac) + ' / ' + int_to_ip(self.sender_ip) + \
+            ' -> ' + hex(self.target_mac) + ' / ' + int_to_ip(self.target_ip)
