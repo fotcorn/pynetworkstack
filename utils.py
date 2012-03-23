@@ -7,7 +7,8 @@ def int_to_ip(i):
             (i & 0x0000FF00) >> 8,
             (i & 0x000000FF))
 
-
-
 def ip_to_int(ip):
-    pass
+    splits = ip.split('.')
+    return ((int(splits[0]) << 24) + (int(splits[1]) << 16) + 
+            (int(splits[2]) << 8) + (int(splits[3]) << 0))
+
