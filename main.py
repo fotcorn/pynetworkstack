@@ -17,7 +17,7 @@ f = os.open("/dev/net/tun", os.O_RDWR)
 ifs = ioctl(f, TUNSETIFF, struct.pack("16sH", "tap0", TAP_MODE))
 
 def write_callback(ethernet_frame):
-    f.write(struct.pack('I', ethernet_frame.protocol) + ethernet_frame.encode())
+    os.write(f, struct.pack('I', ethernet_frame.protocol) + ethernet_frame.encode())
     
 # get generated mac address of tap device
 ifr = 'tap0' + '\0' * 28

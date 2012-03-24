@@ -18,7 +18,6 @@ class EthernetFrame():
         data += self.payload
         if len(data) < 60: # add trailer if packet to short
             data += '\0' * (60 - len(data))
-        data += len(self.payload)
         return data
     
     def __str__(self):
