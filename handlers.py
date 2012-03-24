@@ -49,7 +49,7 @@ class ARPHandler(object):
             arp_response.target_mac = arp_packet.sender_mac
             arp_response.target_ip = arp_packet.sender_ip
             
-            ethernet_handler.send(arp_response.encode(), ethernet_frame.sender_mac, ARP_PROTOCOL)
+            #ethernet_handler.send(arp_response.encode(), ethernet_frame.sender_mac, ARP_PROTOCOL)
 arp_handler = ARPHandler()
 
 class IPHandler():
