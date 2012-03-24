@@ -1,8 +1,8 @@
 from binascii import unhexlify
 import struct
 
-from datastructs import EthernetFrame, Arp
-from utils import ip_to_int
+from pynetstack.datastructs import EthernetFrame, Arp
+from pynetstack.utils import ip_to_int
 
 data = unhexlify('00000806ffffffffffffe4115b2ca6d808060001080006040001e4115b2ca6d8c0a802e6000000000000c0a802e7')
 
