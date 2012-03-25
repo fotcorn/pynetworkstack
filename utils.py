@@ -1,4 +1,4 @@
-
+import struct
 
 def int_to_ip(i):
     return '%s.%s.%s.%s' % (
@@ -23,3 +23,26 @@ def decode_mac(first, second):
 # usage: struct.pack('!IH', *encode_mac(mac))
 def encode_mac(mac_address):
     return (mac_address >> 16, mac_address & 0xFFFF)
+
+
+def internet_checksum(data):
+    length = len(data)
+    if length % 2 == 1:
+        ints = struct.unpack('!' + 'H' * (length/2) + 'B', data)
+    else:
+        ints = struct.unpack('!' + 'H' * (length/2), data)
+        
+    sum = 0
+    for i in ints:
+        sum += i
+    
+    # add carried bits to the lower 16 bits
+    sum = (sum & 0xFFFF) + (sum >> 16)
+    
+    # inverse all bytes (1's complement)
+    sum = sum ^ 0xFFFF
+    
+    return struct.pack('!H', sum)
+        
+    
+    
