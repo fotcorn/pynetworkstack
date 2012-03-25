@@ -2,6 +2,9 @@ from pynetstack.datastructs import EthernetFrame, ARPPacket, IPPacket
 
 ARP_PROTOCOL = 0x806
 IP_PROTOCOL = 0x800
+ICMP_PROTOCOL = 0x01
+UDP_PROTOCOL = 0x11
+TCP_PROTOCOL = 0x06
 
 mac_address = None
 ip_address = None
@@ -55,9 +58,15 @@ arp_handler = ARPHandler()
 class IPHandler():
     def recive(self, ethernet_frame):
         print 'ip packet from %s to %s' % (ethernet_frame.source, ethernet_frame.destination)
-        
         ip_packet = IPPacket()
         ip_packet.decode(ethernet_frame.payload)
+        
+        if ip_packet.protocol == ICMP_PROTOCOL:
+            icmp_handler.recive(ip_packet)
+        elif ip_packet.protocol == TCP_PROTOCOL:
+            tcp_handler.recive(ip_packet)
+        elif ip_packet.protocol == UDP_PROTOCOL:
+            udp_handler.recive(ip_packet)
         
     def send(self, payload, dest_ip):
         pass 
@@ -66,17 +75,17 @@ ip_handler = IPHandler()
 #######################
 
 class ICMPHandler():
-    def recive(self, ip_frame):
+    def recive(self, ip_packet):
         pass
 icmp_handler = ICMPHandler()
 
 class TCPHandler():
-    def recive(self, ip_frame):
+    def recive(self, ip_packet):
         pass
 tcp_handler = TCPHandler()
     
 class UDPHandler():
-    def recive(self, ip_frame):
+    def recive(self, ip_packet):
         pass
 udp_handler = UDPHandler()
 

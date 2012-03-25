@@ -80,7 +80,22 @@ class IPPacket():
         pass
     
     
+class ICMPPacket():
     
+    type = code = checksum = id = sequence_number = data = None
+    
+    
+    def decode(self, data):
+        packet = struct.unpack('!BBHHH', data[:8])
+        self.type = packet[0]
+        self.code = packet[1]
+        self.checksum = packet[2]
+        self.id = packet[3]
+        self.sequence_number = packet[4]
+        self.data = data[8:]
+    
+    def encode(self):
+        pass
     
     
     
