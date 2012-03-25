@@ -1,4 +1,4 @@
-from pynetstack.datastructs import EthernetFrame, Arp
+from pynetstack.datastructs import EthernetFrame, ARPPacket, IPPacket
 
 ARP_PROTOCOL = 0x806
 IP_PROTOCOL = 0x800
@@ -34,11 +34,11 @@ class ARPHandler(object):
     def recive(self, ethernet_frame):
         print 'arp packet from %s to %s' % (hex(ethernet_frame.source), hex(ethernet_frame.destination))
         
-        arp_packet = Arp()
+        arp_packet = ARPPacket()
         arp_packet.decode(ethernet_frame.payload)
         
         if arp_packet.target_ip == ip_address:
-            arp_response = Arp()
+            arp_response = ARPPacket()
             arp_response.hw_type = 1
             arp_response.proto_type = 0x800
             arp_response.hw_size = 6
@@ -55,6 +55,10 @@ arp_handler = ARPHandler()
 class IPHandler():
     def recive(self, ethernet_frame):
         print 'ip packet from %s to %s' % (ethernet_frame.source, ethernet_frame.destination)
+        
+        ip_packet = IPPacket()
+        ip_packet.decode(ethernet_frame.payload)
+        
     def send(self, payload, dest_ip):
         pass 
 ip_handler = IPHandler()

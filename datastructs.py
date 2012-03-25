@@ -23,7 +23,7 @@ class EthernetFrame():
     def __str__(self):
         return hex(self.protocol) + ': ' + hex(self.source) + ' -> ' + hex(self.destination)
     
-class Arp():
+class ARPPacket():
     hw_type = proto_type = hw_size = proto_size = opcode = sender_mac = sender_ip = target_mac = target_ip = None
     
     def decode(self, data):
@@ -52,3 +52,50 @@ class Arp():
     def __str__(self):
         return str(self.opcode) + ': ' + hex(self.sender_mac) + ' / ' + int_to_ip(self.sender_ip) + \
             ' -> ' + hex(self.target_mac) + ' / ' + int_to_ip(self.target_ip)
+
+class IPPacket():
+    
+    version = header_length = tos = length = id = flags = ttl = protocol = header_checksum = source = destination = payload = None
+    
+    def decode(self, data):
+        version_hl = struct.unpack('!B', data[0])[0]
+        self.version =  (version_hl & 0xF0) >> 4
+        self.header_length = (version_hl & 0x0F) * 4 # convert to num bytes
+        
+        header = data[1:self.header_length]
+        packet = struct.unpack('!BHHHBBHII', header)
+        
+        self.tos = packet[0]
+        self.length = packet[1]
+        self.id = packet[2]
+        self.flags = packet[3]
+        self.ttl = packet[4]
+        self.protocol = packet[5]
+        self.header_checksum = packet[6]
+        self.source = packet[7]
+        self.destination = packet[8]
+        self.payload = data[self.header_length:self.length]
+                
+    def encode(self):
+        pass
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
