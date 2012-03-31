@@ -1,3 +1,5 @@
+sudo service network-manager stop
+sudo sysctl -w net.ipv4.ip_forward=1
 sudo brctl addbr br0
 sudo brctl addif br0 eth0
 sudo ifconfig eth0 0.0.0.0 promisc up

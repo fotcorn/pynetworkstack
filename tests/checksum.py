@@ -1,6 +1,8 @@
 from pynetstack.utils import internet_checksum
 from pynetstack.tests.data import icmp_packet
+
 from binascii import hexlify, unhexlify
+import struct
 
 icmp_packet = unhexlify(icmp_packet)
 
@@ -16,3 +18,7 @@ if res == checksum:
 else:
     print 'checksum wrong'
 
+if internet_checksum(icmp_packet) == struct.pack('!H', 0x0000):
+    print 'checksum ok'
+else:
+    print 'checksum wrong'

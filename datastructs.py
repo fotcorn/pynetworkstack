@@ -1,5 +1,6 @@
 import struct
-from pynetstack.utils import int_to_ip, decode_mac, encode_mac, net_checksum
+from pynetstack.utils import int_to_ip, decode_mac, encode_mac,\
+    internet_checksum
 
 class EthernetFrame():
     source = destination = protocol = payload = None
@@ -62,7 +63,7 @@ class IPPacket():
         self.version =  (version_hl & 0xF0) >> 4
         self.header_length = (version_hl & 0x0F) * 4 # convert to num bytes
         
-        header = data[1:self.header_length]
+        header = data[1:20]
         packet = struct.unpack('!BHHHBBHII', header)
         
         self.tos = packet[0]
@@ -97,23 +98,7 @@ class ICMPPacket():
     def encode(self):
         data = struct.pack('!BBHHH', self.type, self.code, 0, self.id, self.sequence_number)
         data += self.data
-        checksum = struct.pack('H', net_checksum(data))
+        checksum = struct.pack('H', internet_checksum(data))
         data = data[:2] + checksum + data[4:]
         return data
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     

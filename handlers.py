@@ -1,4 +1,6 @@
-from pynetstack.datastructs import EthernetFrame, ARPPacket, IPPacket
+from pynetstack.datastructs import EthernetFrame, ARPPacket, IPPacket,\
+    ICMPPacket
+from pynetstack.utils import int_to_ip
 
 ARP_PROTOCOL = 0x806
 IP_PROTOCOL = 0x800
@@ -35,10 +37,12 @@ ethernet_handler = EthernetHandler()
 
 class ARPHandler(object):
     def recive(self, ethernet_frame):
-        print 'arp packet from %s to %s' % (hex(ethernet_frame.source), hex(ethernet_frame.destination))
+        
         
         arp_packet = ARPPacket()
         arp_packet.decode(ethernet_frame.payload)
+        
+        print 'arp packet from %s to %s (%s)' % (hex(ethernet_frame.source), hex(ethernet_frame.destination), int_to_ip(arp_packet.target_ip))
         
         if arp_packet.target_ip == ip_address:
             arp_response = ARPPacket()
@@ -57,16 +61,16 @@ arp_handler = ARPHandler()
 
 class IPHandler():
     def recive(self, ethernet_frame):
-        print 'ip packet from %s to %s' % (ethernet_frame.source, ethernet_frame.destination)
         ip_packet = IPPacket()
         ip_packet.decode(ethernet_frame.payload)
         
-        if ip_packet.protocol == ICMP_PROTOCOL:
-            icmp_handler.recive(ip_packet)
-        elif ip_packet.protocol == TCP_PROTOCOL:
-            tcp_handler.recive(ip_packet)
-        elif ip_packet.protocol == UDP_PROTOCOL:
-            udp_handler.recive(ip_packet)
+        if ip_packet.destination == ip_address:
+            if ip_packet.protocol == ICMP_PROTOCOL:
+                icmp_handler.recive(ip_packet)
+            elif ip_packet.protocol == TCP_PROTOCOL:
+                tcp_handler.recive(ip_packet)
+            elif ip_packet.protocol == UDP_PROTOCOL:
+                udp_handler.recive(ip_packet)
         
     def send(self, payload, dest_ip):
         pass 
@@ -76,17 +80,20 @@ ip_handler = IPHandler()
 
 class ICMPHandler():
     def recive(self, ip_packet):
-        pass
+        icmp_packet = ICMPPacket()
+        icmp_packet.decode(ip_packet.payload)
+        print 'icmp packet from %s to %s' % (int_to_ip(ip_packet.source), int_to_ip(ip_packet.destination))
+        
 icmp_handler = ICMPHandler()
 
 class TCPHandler():
     def recive(self, ip_packet):
-        pass
+        print 'tcp packet from %s to %s' % (int_to_ip(ip_packet.source), int_to_ip(ip_packet.destination))
 tcp_handler = TCPHandler()
     
 class UDPHandler():
     def recive(self, ip_packet):
-        pass
+        print 'udp packet from %s to %s' % (int_to_ip(ip_packet.source), int_to_ip(ip_packet.destination))
 udp_handler = UDPHandler()
 
 
